@@ -16,11 +16,12 @@ import (
 
 type Video struct{}
 
-const BucketName = "tiktok-video11"
+const BucketName = "coldheart"
 
 func (v Video) PublishAction(data *multipart.FileHeader, title string, publishId int64) error {
 	//oss.CreateBucket(BucketName)
 	// 获取文件
+	// 判断是否为视频
 	file, err := data.Open()
 	if err != nil {
 		return err
@@ -30,14 +31,8 @@ func (v Video) PublishAction(data *multipart.FileHeader, title string, publishId
 		if err != nil {
 		}
 	}(file)
-	// 判断是否为视频
-	checkFile, err := data.Open()
-	if err != nil {
-		return err
-	}
-
 	buf := bytes.NewBuffer(nil)
-	if _, err := io.Copy(buf, checkFile); err != nil {
+	if _, err := io.Copy(buf, file); err != nil {
 		logrus.Error("copy file error", err)
 		return err
 	}
@@ -45,9 +40,16 @@ func (v Video) PublishAction(data *multipart.FileHeader, title string, publishId
 		logrus.Error("file is not video")
 		return errors.New("not a video")
 	}
-	checkFile.Close()
+
+	//checkFile.Close()
 	// 存储到oss
-	log.Logger.Info("start to upload video to oss, file type: ")
+	log.Logger.Info("start to upload video to oss, 文件名： " + data.Filename)
+	// seek checkFile
+	_, err = file.Seek(0, 0)
+	if err != nil {
+		logrus.Error("seek file error", err)
+		return err
+	}
 	ok, err := oss.UploadVideoToOss(BucketName, data.Filename, file)
 	if err != nil {
 		return err

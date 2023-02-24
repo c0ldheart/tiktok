@@ -5,11 +5,11 @@ import (
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 	"strconv"
+	"sync"
 	"tikapp/common/db"
 	"tikapp/common/log"
 	"tikapp/common/model"
 	"tikapp/util"
-	"sync"
 )
 
 type VideoFavorite struct{}
@@ -70,7 +70,7 @@ func (favorite *VideoFavorite) RemoveFavor(videoId int64, userId int64) error {
 		log.Logger.Error("get favorite latestFlag failed")
 		latestFlag = "1"
 	}
-	logrus.Info("latestFlag: ", latestFlag)
+	logrus.Info("查看redis缓存点赞表：", "videoId: ", videoId, " userId: ", userId, " latestFlag: ", latestFlag)
 	if latestFlag != "0" {
 		_, err := rdb.HSet(context.Background(), "FavoriteHash", util.Connect(videoId, userId), 0).Result()
 		if err != nil {
@@ -97,7 +97,7 @@ func (v *VideoFavorite) FavorList(userId int64) (interface{}, error) {
 		defer m.Unlock()
 		m.Lock()
 		RegularUpdate()
-		}()
+	}()
 
 	logrus.Info("delete redis success")
 	// 获取目标用户发布的视频
@@ -120,7 +120,7 @@ func (v *VideoFavorite) FavorList(userId int64) (interface{}, error) {
 			return nil, err
 		}
 		logrus.Info("videoInTable", videoInTable)
-		
+
 		tempvideo := VideoResp{
 			Id:            videoInTable.Id,
 			PlayUrl:       videoInTable.PlayUrl,

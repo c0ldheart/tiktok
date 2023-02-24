@@ -2,6 +2,7 @@ package oss
 
 import (
 	"fmt"
+	"github.com/sirupsen/logrus"
 	"mime/multipart"
 	"tikapp/common/config"
 	"tikapp/common/log"
@@ -16,6 +17,7 @@ func AliyunInit() {
 		return
 	}
 	AliyunClient = client
+	log.Logger.Info("aliyun oss 初始化成功")
 }
 
 func CreateBucket(name string) {
@@ -25,7 +27,7 @@ func CreateBucket(name string) {
 		if err == nil && exist {
 			log.Logger.Info(fmt.Sprintf("We already own %s\n", name))
 		} else {
-			log.Logger.Error("create bucket error")
+			logrus.Error("create bucket error", err)
 			return
 		}
 	}
