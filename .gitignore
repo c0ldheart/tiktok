@@ -18,7 +18,7 @@
 .idea
 .vscode 
 
-app.yaml
+app_local.yaml
 
 bin/
 logs/

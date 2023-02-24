@@ -2,14 +2,13 @@ package main
 
 import (
 	"fmt"
+	"github.com/gin-gonic/gin"
 	"sync"
 	"tikapp/common/config"
 	"tikapp/common/cron"
 	"tikapp/common/db"
 	"tikapp/common/log"
 	"tikapp/common/oss"
-
-	"github.com/gin-gonic/gin"
 )
 
 var once sync.Once

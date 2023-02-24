@@ -16,7 +16,7 @@ func ReadCfg() {
 	conf = &config{
 		viper.New(),
 	}
-	conf.SetConfigName("app")
+	conf.SetConfigName("app_local")
 	conf.SetConfigType("yaml")
 	conf.AddConfigPath("../")
 	conf.AddConfigPath(".")

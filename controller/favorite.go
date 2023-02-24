@@ -3,6 +3,7 @@ package ctrl
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
+	"github.com/sirupsen/logrus"
 	"tikapp/common/log"
 	res "tikapp/common/result"
 	srv "tikapp/service"
@@ -40,7 +41,7 @@ func FavoriteAction(c *gin.Context) {
 	}
 	userId, _ := c.Get("userId")
 	// 请求参数错误
-	if req.ActionId != 2 && req.ActionId != 1 {
+	if req.ActionId != 0 && req.ActionId != 1 {
 		res.Error(c, res.Status{
 			StatusCode: res.QueryParamErrorStatus.StatusCode,
 			StatusMsg:  res.QueryParamErrorStatus.StatusMsg,
@@ -59,8 +60,9 @@ func FavoriteAction(c *gin.Context) {
 			})
 			return
 		}
-	case 2:
+	case 0:
 		//取消赞
+		logrus.Info("取消赞")
 		err = favorite.RemoveFavor(req.VideoId, userId.(int64))
 		if err != nil {
 			log.Logger.Error(err.Error())
@@ -70,7 +72,9 @@ func FavoriteAction(c *gin.Context) {
 			})
 			return
 		}
-
+	default:
+		log.Logger.Error("action_type illegal") //不会到达
+		return
 	}
 	res.Success1(c)
 }
