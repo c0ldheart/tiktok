@@ -28,7 +28,7 @@ jobs:
       # 使用appleboy/ssh-action@master来执行命令
         uses: appleboy/ssh-action@master
         with:
-          HOST: ${{ secrets.REMOTE_USER }}
+          HOST: ${{ secrets.DEPLOY_HOST }}
           USERNAME: ${{ secrets.DEPLOY_USER }}
-          KEY: ${{ secrets.DEPLOY_SECRET }}
+          KEY: ${{ secrets.DEPLOY_KEY }}
           SCRIPT: ${{ secrets.TARGET_PATH }} && git pull && go run *.go
