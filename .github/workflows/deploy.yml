@@ -23,15 +23,11 @@ jobs:
       - name: checkout
         uses: actions/checkout@v3
 
-      - uses: actions/cache@v3
+      - name: executing remote ssh commands
+      # 使用appleboy/ssh-action@master来执行命令
+        uses: appleboy/ssh-action@master
         with:
-          path: |
-            ~/.cache/go-build
-            ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-
-      - name: Build
-        working-directory: cmd
-        run: |
-          GOOS=linux GPARCH=amd64 go build
+          host: ${{ secrets.REMOTE_USER }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SECRET }}
+          script: ${{ secrets.TARGET_PATH }} && git pull && go run *.go
