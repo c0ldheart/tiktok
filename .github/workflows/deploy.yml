@@ -26,7 +26,7 @@ jobs:
 
       - name: executing remote ssh commands
       # 使用appleboy/ssh-action@master来执行命令
-        uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@v0.1.8
         with:
           HOST: ${{ secrets.DEPLOY_HOST }}
           USERNAME: ${{ secrets.DEPLOY_USER }}
