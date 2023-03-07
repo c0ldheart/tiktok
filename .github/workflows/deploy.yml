@@ -32,4 +32,4 @@ jobs:
           USERNAME: ${{ secrets.DEPLOY_USER }}
           KEY: ${{ secrets.DEPLOY_KEY }}
           # SCRIPT: ${{ secrets.TARGET_PATH }} && git pull
-          SCRIPT: whoami && cd ${{ secrets.TARGET_PATH }} && git pull
+          SCRIPT: whoami && cd ${{ secrets.TARGET_PATH }} && git pull --rebase
