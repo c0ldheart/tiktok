@@ -1,0 +1,33 @@
+# This workflow will build a golang project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-go
+
+name: Build
+on:
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - "**.md"
+      - "**.txt"
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: load Go 1.18 env
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.18
+
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - name: executing remote ssh commands
+      # 使用appleboy/ssh-action@master来执行命令
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.REMOTE_USER }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SECRET }}
+          script: ${{ secrets.TARGET_PATH }} && git pull && go run *.go
